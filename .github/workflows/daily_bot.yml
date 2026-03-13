@@ -1,43 +1,34 @@
-name: Robot Bodet News
+name: Bodet News Robot
+
 on:
-  workflow_dispatch:
+  workflow_dispatch
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Ambil Kode
+      - name: Ambil repository
         uses: actions/checkout@v4
 
-      - name: Setting Python
+      - name: Install Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
-      - name: Install Library
-        run: pip install google-generativeai edge-tts
+      - name: Install library
+        run: |
+          pip install google-generativeai edge-tts
 
-      - name: Jalankan Robot
+      - name: Jalankan bot
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: python main.py
 
-      - name: Cek Lokasi File
-        run: ls -R
-
-      - name: Upload Hasil Bodet News
+      - name: Upload hasil
         uses: actions/upload-artifact@v4
         with:
-          name: Konten-Bodet-News
-          path: |
-            **/*.txt
-            **/*.mp3
-          if-no-files-found: warn
-      - name: Munculkan Tombol Download
-        uses: actions/upload-artifact@v4
-        with:
-          name: Hasil-Bodet-News
+          name: bodet-news
           path: |
             naskah_berita.txt
             audio_berita.mp3
-          if-no-files-found: error
