@@ -9,26 +9,32 @@ genai.configure(api_key=api_key)
 
 async def buat_konten():
     try:
+        # Gunakan model Flash terbaru yang punya akses informasi luas
         model = genai.GenerativeModel('gemini-1.5-flash-latest')
         
-        # Prompt khusus Bodet News
-        prompt = "Buat skrip berita geopolitik viral hari ini untuk channel YouTube 'Bodet News'. Gaya tegas, 150 kata. Sertakan ide gambar 3D CGI."
+        # PROMPT ini menyuruh Gemini mencari berita terbaru
+        prompt = (
+            "Cari berita geopolitik internasional paling viral dan terbaru dalam 24 jam terakhir. "
+            "Berdasarkan berita tersebut, buatkan skrip video pendek untuk channel YouTube 'Bodet News'. "
+            "Gaya bahasa: Tegas, dramatis, dan informatif. "
+            "Panjang: 150 kata. Sertakan judul yang clickbait tapi jujur."
+        )
         
-        print("Bodet News: Meminta naskah...")
+        print("Bodet News: Sedang riset berita terbaru lewat Gemini...")
         response = model.generate_content(prompt)
         naskah = response.text
         
-        # Simpan file di lokasi yang pasti terdeteksi
+        # Simpan naskah
         with open("naskah_berita.txt", "w", encoding="utf-8") as f:
             f.write(naskah)
-        print("File naskah tersimpan.")
+        print("Riset selesai, naskah disimpan.")
 
         # Buat Suara
-        print("Bodet News: Membuat suara...")
+        print("Bodet News: Menghasilkan suara Ardi...")
         VOICE = "id-ID-ArdiNeural"
         communicate = edge_tts.Communicate(naskah, VOICE)
         await communicate.save("audio_berita.mp3")
-        print("File audio tersimpan.")
+        print("Suara berhasil dibuat!")
         
     except Exception as e:
         print(f"Error: {e}")
