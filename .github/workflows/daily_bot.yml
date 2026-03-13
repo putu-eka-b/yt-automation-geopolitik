@@ -15,18 +15,21 @@ jobs:
           python-version: '3.10'
 
       - name: Install Library
-        run: |
-          pip install google-generativeai edge-tts
+        run: pip install google-generativeai edge-tts
 
-      - name: Jalankan Robot Riset
+      - name: Jalankan Robot
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: python main.py
 
-      - name: Munculkan Tombol Download
+      - name: Cek Lokasi File
+        run: ls -R
+
+      - name: Upload Hasil Bodet News
         uses: actions/upload-artifact@v4
         with:
-          name: Hasil-Riset-Bodet-News
+          name: Konten-Bodet-News
           path: |
-            naskah_berita.txt
-            audio_berita.mp3
+            **/*.txt
+            **/*.mp3
+          if-no-files-found: warn
