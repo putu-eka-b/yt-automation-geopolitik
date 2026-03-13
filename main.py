@@ -3,35 +3,32 @@ import google.generativeai as genai
 import asyncio
 import edge_tts
 
-# Ambil API Key dari Secrets GitHub
+# Ambil API Key dari Secrets
 api_key = os.environ.get("GEMINI_API_KEY")
 genai.configure(api_key=api_key)
 
 async def buat_konten():
     try:
-        # Pakai model latest biar lancar
         model = genai.GenerativeModel('gemini-1.5-flash-latest')
         
-        # Prompt khusus channel Bodet News
-        prompt = (
-            "Buat skrip berita geopolitik viral hari ini untuk channel YouTube 'Bodet News'. "
-            "Gaya tegas dan informatif. Panjang 150 kata. "
-            "Sertakan ide prompt gambar 3D CGI sinematik di akhir."
-        )
+        # Prompt khusus Bodet News
+        prompt = "Buat skrip berita geopolitik viral hari ini untuk channel YouTube 'Bodet News'. Gaya tegas, 150 kata. Sertakan ide gambar 3D CGI."
         
-        print("Bodet News: Memanggil Gemini...")
+        print("Bodet News: Meminta naskah...")
         response = model.generate_content(prompt)
         naskah = response.text
         
-        with open("naskah_berita.txt", "w") as f:
+        # Simpan file di lokasi yang pasti terdeteksi
+        with open("naskah_berita.txt", "w", encoding="utf-8") as f:
             f.write(naskah)
+        print("File naskah tersimpan.")
 
-        # Buat Suara Indonesia (Ardi)
+        # Buat Suara
         print("Bodet News: Membuat suara...")
         VOICE = "id-ID-ArdiNeural"
         communicate = edge_tts.Communicate(naskah, VOICE)
         await communicate.save("audio_berita.mp3")
-        print("Berhasil! File Bodet News siap.")
+        print("File audio tersimpan.")
         
     except Exception as e:
         print(f"Error: {e}")
