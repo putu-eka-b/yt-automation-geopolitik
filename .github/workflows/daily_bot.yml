@@ -1,0 +1,27 @@
+name: Robot Det Invests
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 1 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - run: pip install google-generativeai edge-tts
+      - name: Run Script
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python main.py
+      - name: Simpan Hasil
+        uses: actions/upload-artifact@v4
+        with:
+          name: Konten-Hari-Ini
+          path: |
+            audio_berita.mp3
+            naskah_berita.txt
+
